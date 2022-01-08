@@ -1,7 +1,13 @@
+// use user/ thought from models folder
 const { User, Thought } = require('../models');
 
+// authentication error from apollo
 const { AuthenticationError } = require('apollo-server-express');
 
+// auth token from auth.js
+const { signToken } = require('../utils/auth');
+
+// resolvers query/ mutations/ auth
 const resolvers = {
     Query: {
         thoughts: async (parent, { username }) => {
@@ -32,11 +38,11 @@ const resolvers = {
             // add user
             addUser: async (parent, args) => {
                 const user = await User.create(args);
+                const token = signToken(user);
               
-                return user;
-            },
-            // user login
-            login: async (parent, { email, password }) => {
+                return { token, user };
+              },
+              login: async (parent, { email, password }) => {
                 const user = await User.findOne({ email });
               
                 if (!user) {
@@ -49,7 +55,8 @@ const resolvers = {
                   throw new AuthenticationError('Incorrect credentials');
                 }
               
-                return user;
+                const token = signToken(user);
+                return { token, user };
               }
               
         }
