@@ -1,2 +1,5 @@
-server/node_modules
 node_modules
+server/node_modules
+/node_modules
+/Users/jaredelliott/Desktop/deep-thoughts/server/node_modules
+
